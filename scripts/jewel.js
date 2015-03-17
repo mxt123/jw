@@ -5,6 +5,17 @@ var jewel =(function() {
 		numResources=0,
 		executeRunning=false;
 
+	function showScreen(screenId) {
+		var dom = jewel.dom,
+			$ = dom.$,
+			activeScreen = $("#game .screen.active")[0],
+			screen = $("#" + screenId)[0];
+		if (activeScreen) {
+			dom.removeClass(activeScreen,"active");
+		}
+		dom.addClass(screen,"active");
+	}
+
 	function executeScriptQueue(){
 		var next= scriptQueue[0],first, script;
 		if (next && next.loaded) {
@@ -14,7 +25,7 @@ var jewel =(function() {
 			scriptQueue.shift();
 			first=document.getElementsByTagName("script")[0];
 			script=document.createElement("script");
-			script.onLoad=function(){
+			script.onload=function(){
 				if(next.callback) {
 					next.callback();
 				}
@@ -53,12 +64,14 @@ var jewel =(function() {
 	}
 
 	function setup () {
-		console.log("Setup.");
+		console.log("Success.");
+		showScreen("splash-screen");
 	}
 
 	return {
 		load: load,
-		setup: setup
+		setup: setup,
+		showScreen: showScreen
 	};
 
 })();
