@@ -236,12 +236,32 @@ jewel.board = (function(){
 		return copy;
 	}
 
+	function swap (x1, y1, x2, y2, callback) {
+		var tmp,
+			events;
+
+		// swap jewels
+		if (canSwap(x1, y1, x2, y2)) {
+			tmp = getJewel(x1,y1);
+			jewels[x1][y1] = getJewel(x2,y2);
+			jewels[x2][y2] = tmp;
+
+			// check board and get event list
+			events = check();
+
+			callback(events);
+		} else {
+			callback(false);
+		}
+	}
+
 	return {
 		initialize: initialize,
 		print: print,
 		checkChain: checkChain,
 		canSwap: canSwap,
-		getBoard : getBoard
+		getBoard : getBoard,
+		swap : swap
 	}; 
 
 })();
