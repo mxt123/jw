@@ -5,6 +5,13 @@ var jewel =(function() {
 		numResources=0,
 		executeRunning=false;
 
+	var settings=  {
+		rows: 8,
+		cols: 8,
+		baseScore: 100,
+		numJewelTypes: 7
+	};
+
 	function showScreen(screenId) {
 		var dom = jewel.dom,
 			$ = dom.$,
@@ -71,7 +78,8 @@ var jewel =(function() {
 	return {
 		load: load,
 		setup: setup,
-		showScreen: showScreen
+		showScreen: showScreen,
+		settings: settings
 	};
 
 })();
