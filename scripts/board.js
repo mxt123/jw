@@ -68,6 +68,9 @@ jewel.board = (function(){
 					jewels[x][y] = type;
 			}
 		}
+		if (!hasMoves()) {
+			fillBoard();
+		}
 	}
 
 	function randomJewel() {
@@ -122,7 +125,7 @@ jewel.board = (function(){
 	function getChains() {
 		var x, y, chains = [];
 
-		for (x = 0l x < cols; x++) {
+		for (x = 0; x < cols; x++) {
 			chains[x] = [];
 			for (y = 0; y < rows; y++) {
 				chains[x][y] = checkChain(x,y);
@@ -131,8 +134,10 @@ jewel.board = (function(){
 		return chains;
 	}
 
-	function check() {
-		var chains = getChains(),
+	function check(events) {
+		var x,
+			y,
+			chains = getChains(),
 			hadChains = false,
 			score = 0,
 			removed = [],
@@ -150,10 +155,12 @@ jewel.board = (function(){
 						y : y,
 						type : getJewel(x, y)
 					});
+					// add points to score
+					score += baseScore * Math.pow(2, (chains[x][y] -3));
 				} else if (gaps[x] > 0) {
 					moved.push({
 						toX : x,
-						toY : y, + gaps[x],
+						toY : y + gaps[x],
 						fromX : x,
 						fromY : y,
 						type : getJewel(x,y) 
@@ -162,13 +169,79 @@ jewel.board = (function(){
 				}
 			}
 		}
+		// fill from top
+		for (x = 0; x < cols; x++) {
+			for (y=0; y< gaps[x]; y++) {
+				jewels[x][y] = randomJewel();
+				moved.push({
+					toX :x,
+					toY: y,
+					fromX: x,
+					fromY: y - gaps[x],
+					type : jewels[x][y]
+				});
+			}
+		}
+
+		events = events || [];
+
+		if(hadChains) {
+			events.push({
+				type : "remove",
+				data : removed
+			},{
+				type : "score",
+				data : score
+			},{
+				type : "move",
+				data : moved
+			});
+			if (!hasMoves()) {
+				fillBoard();
+				events.push({
+					type : "refill",
+					data : getBoard()
+				});
+			}
+			return check(events);
+		} else {
+			return events;
+		}
+	}
+
+	function hasMoves() {
+		for (var x = 0; x < cols; x++) {
+			for (var y = 0; y < rows; y ++) {
+				if (canJewelMove(x, y)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	function canJewelMove(x, y) {
+		return ((x > 0 && canSwap(x, y, x-1, y)) ||
+			(x < cols-1 && canSwap(x,y,x+1, y)) ||
+			(y>0 && canSwap(x,y,x,y-1)) ||
+			(y< rows-1 && canSwap(x,y,x,y+1)));
+	}
+
+	function getBoard() {
+		var copy = [],
+			x;
+		for (x = 0; x < cols; x++) {
+			copy[x] = jewels[x].slice(0);
+		}
+		return copy;
 	}
 
 	return {
 		initialize: initialize,
 		print: print,
 		checkChain: checkChain,
-		canSwap: canSwap
-	};
+		canSwap: canSwap,
+		getBoard : getBoard
+	}; 
 
 })();
