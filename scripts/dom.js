@@ -17,7 +17,7 @@ jewel.dom = (function(){
 	}
 
 	function removeClass(el, clsName) {
-		var regex = new RegExp("(^|\\s" + clsName + "\\s|$)");
+		var regex = new RegExp("(^|\\s)" + clsName + "(\\s|$)");
 		el.className = el.className.replace(regex," ");
 	}
 

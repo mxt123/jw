@@ -1,0 +1,22 @@
+#game {
+	width : 100%;
+	height : 100%;
+}
+
+/* phone screens */
+@media (max-device-width: 480px) and (orientation: portrait),
+@media (max-device-width: 640px) and (orientation: landscape) {
+	#game {
+		font-size: 32px;
+	}
+}
+
+/* ipad and tablet */
+@media (min-device-width: 768px) and (orientation: portrait),
+@media (max-device-width: 1024px) and (orientation: landscape) {
+	#game {
+		font-size: 64px;
+	}
+}
+
+/* phone landscape */
