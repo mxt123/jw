@@ -17,10 +17,18 @@ var jewel =(function() {
 			$ = dom.$,
 			activeScreen = $("#game .screen.active")[0],
 			screen = $("#" + screenId)[0];
+
+		if (!jewel.screens[screenId]) {
+			alert("not implemented yet.");
+			return;
+		}
+
 		if (activeScreen) {
 			dom.removeClass(activeScreen,"active");
 		}
+
 		dom.addClass(screen,"active");
+		jewel.screens[screenId].run();
 	}
 
 	function executeScriptQueue(){
@@ -68,6 +76,8 @@ var jewel =(function() {
 		};
 		image.src= src;
 		console.log("loaded.")
+
+
 	}
 
 	function setup () {
@@ -79,7 +89,8 @@ var jewel =(function() {
 		load: load,
 		setup: setup,
 		showScreen: showScreen,
-		settings: settings
+		settings: settings,
+		screens: {}
 	};
 
 })();
